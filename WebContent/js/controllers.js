@@ -6,9 +6,13 @@ angular.module('fcApp.controllers', ['ngStorage']).
   controller('FuelController', ['$scope','$localStorage', function($scope, $localStorage) {
 	  var fuelController = {};
 	  
-	  $scope.obj = {}
-	  $scope.obj.quantity = 35.0;
-	  $scope.obj.date = new Date();
+	  function init() {
+		  $scope.obj = {}
+		  $scope.obj.quantity = 35.0;
+		  $scope.obj.date = new Date();
+		  $scope.obj.odo = $scope.getMaxKM()+100;
+		  $scope.lastOdo = $scope.getMaxKM();
+	  }
 
 	  $scope.test = function() {
 		  return "returned fuel entries";
@@ -33,6 +37,13 @@ angular.module('fcApp.controllers', ['ngStorage']).
 	  $scope.deleteConsumption= function(obj) {
 		  $localStorage.consumptions.splice($localStorage.consumptions.indexOf(obj),1);
 	  };
+	  
+	  $scope.getMaxKM= function(obj) {
+		  var result = Math.max.apply(Math,$localStorage.consumptions.map(function(elem){return elem.odo;}));
+		  return result;
+	  };
+	  
+	  init();
 	  
 	  return fuelController;
   }  ]);
