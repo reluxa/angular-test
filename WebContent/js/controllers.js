@@ -8,7 +8,8 @@ angular.module('fcApp.controllers', ['ngStorage']).
 	  
 	  $scope.obj = {}
 	  $scope.obj.quantity = 35.0;
-	  
+	  $scope.obj.date = new Date();
+
 	  $scope.test = function() {
 		  return "returned fuel entries";
 	  };
