@@ -1,0 +1,21 @@
+<h3>List all fueling entries</h3>
+<div class="col-xs-5">
+	<table class="table table-striped">
+		<tr>
+			<th>Date</th>
+			<th>Odometer (km)</th>
+			<th>Quantity</th>
+			<th>Price / liter</th>
+			<th>Total</th>
+			<th>Delete</th>
+		</tr>
+		<tr ng-repeat="consumption in consumptions">
+			<td>{{consumption.date | date:'yyyy-MM-dd'}}</td>
+			<td>{{consumption.odo}}</td>
+			<td>{{consumption.quantity}}</td>
+			<td>{{consumption.price | HUF}}</td>
+			<td>{{consumption.price * consumption.quantity | HUF}}</td>
+			<td><button class="btn btn-danger btn-small" ng-click="deleteConsumption(consumption)"><span class="glyphicon glyphicon-trash"/> Delete</button></td>
+		</tr>
+	</table>
+</div>
