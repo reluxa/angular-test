@@ -39,7 +39,10 @@ angular.module('fcApp.controllers', ['ngStorage']).
 	  };
 	  
 	  $scope.getMaxKM= function(obj) {
-		  var result = Math.max.apply(Math,$localStorage.consumptions.map(function(elem){return elem.odo;}));
+  		  var result = 0;
+		  if ($localStorage.consumptions != undefined) {
+			  result = Math.max.apply(Math,$localStorage.consumptions.map(function(elem){return elem.odo;}));
+		  }
 		  return result;
 	  };
 	  
