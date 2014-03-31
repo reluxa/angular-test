@@ -2,48 +2,59 @@
 
 /* Controllers */
 
-angular.module('fcApp.controllers', ['ngStorage']).
-  controller('FuelController', ['$scope','$localStorage', function($scope, $localStorage) {
+angular.module('fcApp.controllers', ['ngStorage', 'fcApp.services']).
+  controller('FuelController', function($scope, FuelService, $routeParams, $location) {
 	  var fuelController = {};
 	  
 	  function init() {
-		  $scope.obj = {}
-		  $scope.obj.quantity = 35.0;
-		  $scope.obj.date = new Date();
-		  $scope.obj.odo = $scope.getMaxKM()+100;
-		  $scope.lastOdo = $scope.getMaxKM();
+		  if ($routeParams.id) {
+			  $scope.obj = FuelService.load($routeParams.id);
+		  } 
+		  
+		  if ($scope.obj == undefined) {
+			  $scope.obj = {};
+			  $scope.obj.quantity = 35.0;
+			  $scope.obj.date = new Date();
+			  $scope.obj.odo = $scope.getMaxKM()+100;
+			  $scope.lastOdo = $scope.getMaxKM();
+		  }
 	  }
 
-	  $scope.test = function() {
-		  return "returned fuel entries";
-	  };
-	  
 	  $scope.open = function($event) {
 		 $event.preventDefault();
 		 $event.stopPropagation();
 		 $scope.opened = true;
-	  }
+	  };
 	  
-	  $scope.consumptions = $localStorage.consumptions;
+	  $scope.consumptions = FuelService.getAll();
 	  
-	  $scope.saveConsumption= function(obj) {
-		  if ($localStorage.consumptions == undefined) {
-			  $localStorage.consumptions = [];
+	  $scope.saveConsumption= function(fueling) {
+		  if (FuelService.save(fueling)) {
+			  
+		  } else {
+			  
 		  }
-		  
-		  $localStorage.consumptions.push(obj);
 	  };
 	  
-	  $scope.deleteConsumption= function(obj) {
-		  $localStorage.consumptions.splice($localStorage.consumptions.indexOf(obj),1);
+	  $scope.deleteConsumption = function(fueling) {
+		  FuelService.remove(fueling);
 	  };
 	  
-	  $scope.getMaxKM= function(obj) {
-		  var result = Math.max.apply(Math,$localStorage.consumptions.map(function(elem){return elem.odo;}));
-		  return result;
+	  $scope.getMaxKM = function() {
+		  return FuelService.getMaxKM();
 	  };
+	  
+	  $scope.openForEdit = function(id) {
+		  $location.path("/edit/"+id);
+	  };
+	  
 	  
 	  init();
 	  
 	  return fuelController;
-  }  ]);
+  } )
+  
+  
+  .controller("HomeController", function() {
+	  
+  });

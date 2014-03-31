@@ -9,8 +9,9 @@ angular.module('fcApp', [
 	'fcApp.controllers',
     'ui.bootstrap'
 ]).config(['$routeProvider', function($routeProvider) {
-  $routeProvider.when('/home',  {templateUrl: 'partials/home.html', controller: 'FuelController'});
-  $routeProvider.when('/add',  {templateUrl: 'partials/addfuel.html', controller: 'FuelController'});
+  $routeProvider.when('/home',  {templateUrl: 'partials/home.html', controller: 'HomeController'});
+  $routeProvider.when('/edit/:id',  {templateUrl: 'partials/edit.html', controller: 'FuelController'});
+  $routeProvider.when('/edit',  {templateUrl: 'partials/edit.html', controller: 'FuelController'});
   $routeProvider.when('/list', {templateUrl: 'partials/list.html', controller: 'FuelController'});
   $routeProvider.otherwise({redirectTo: '/home'});
  }]).filter('HUF', function() {
