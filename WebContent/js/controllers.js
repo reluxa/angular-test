@@ -2,7 +2,7 @@
 
 /* Controllers */
 
-angular.module('fcApp.controllers', ['ngStorage']).
+angular.module('fcApp.controllers', ['ngStorage','firebase']).
   controller('FuelController', ['$scope','$localStorage', function($scope, $localStorage) {
 	  var fuelController = {};
 	  
@@ -37,6 +37,7 @@ angular.module('fcApp.controllers', ['ngStorage']).
 	  $scope.deleteConsumption= function(obj) {
 		  $localStorage.consumptions.splice($localStorage.consumptions.indexOf(obj),1);
 	  };
+
 	  
 	  $scope.getMaxKM= function(obj) {
   		  var result = 0;
@@ -49,4 +50,55 @@ angular.module('fcApp.controllers', ['ngStorage']).
 	  init();
 	  
 	  return fuelController;
-  }  ]);
+  }  ])
+
+
+.controller('LoginController', ['$scope','loginService', function($scope, loginService) {
+	
+	$scope.doLogin = function() {
+		console.log("Login was called");
+		loginService.getAuth().login('facebook');	
+	}
+
+	$scope.doLogout = function() {
+		console.log("Logout was called");
+		loginService.getAuth().logout();
+	}
+	
+}])
+
+
+.service('loginService', ['$rootScope', function($rootScope) {
+	var loginService = {};
+
+	var chatRef = new Firebase('https://burning-fire-9910.firebaseio.com/');
+	var auth = new FirebaseSimpleLogin(chatRef, function(error, user) {
+		if (error) {
+		    // an error occurred while attempting login
+		    console.log(error);
+		  } else if (user) {
+		  	$rootScope.$apply(function(){
+		  		$rootScope.user = user;	
+		  	})
+		    // user authenticated with Firebase
+		    console.log('User ID: ' + user.uid + ', Provider: ' + user.provider);
+		  } else {
+		  	$rootScope.$apply(function(){
+		  		$rootScope.user = null;	
+		  	})
+		  }
+		});
+	
+	loginService.getAuth = function() {
+		return auth;
+	}
+
+	return loginService;
+}])
+
+.controller('MenuController', ['$scope','loginService', function($scope, loginService){
+	console.log(loginService.getAuth());
+
+	$scope.value = 42;
+
+}]);

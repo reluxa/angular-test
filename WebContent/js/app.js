@@ -7,9 +7,10 @@ angular.module('fcApp', [
 	'ngStorage',
 	'uiSlider',
 	'fcApp.controllers',
-    'ui.bootstrap'
+  'ui.bootstrap'
+  
 ]).config(['$routeProvider', function($routeProvider) {
-  $routeProvider.when('/home',  {templateUrl: 'partials/home.html', controller: 'FuelController'});
+  $routeProvider.when('/home',  {templateUrl: 'partials/home.html', controller: 'LoginController'});
   $routeProvider.when('/add',  {templateUrl: 'partials/addfuel.html', controller: 'FuelController'});
   $routeProvider.when('/list', {templateUrl: 'partials/list.html', controller: 'FuelController'});
   $routeProvider.otherwise({redirectTo: '/home'});
