@@ -3,7 +3,10 @@
 /* Controllers */
 
 angular.module('fcApp.controllers', ['ngStorage','firebase']).
-  controller('FuelController', ['$scope','$localStorage', function($scope, $localStorage) {
+  controller('FuelController', ['$scope','$localStorage','$firebase','loginService', 
+  	                    function($scope, $localStorage, $firebase, loginService) {
+
+
 	  var fuelController = {};
 	  
 	  function init() {
@@ -12,6 +15,7 @@ angular.module('fcApp.controllers', ['ngStorage','firebase']).
 		  $scope.obj.date = new Date();
 		  $scope.obj.odo = $scope.getMaxKM()+100;
 		  $scope.lastOdo = $scope.getMaxKM();
+		  //$scope.uid = $scope.user.uid;
 	  }
 
 	  $scope.test = function() {
@@ -24,25 +28,24 @@ angular.module('fcApp.controllers', ['ngStorage','firebase']).
 		 $scope.opened = true;
 	  }
 	  
-	  $scope.consumptions = $localStorage.consumptions;
+	  $scope.consumptions = $firebase(loginService.getFuels());
 	  
 	  $scope.saveConsumption= function(obj) {
-		  if ($localStorage.consumptions == undefined) {
-			  $localStorage.consumptions = [];
-		  }
-		  
-		  $localStorage.consumptions.push(obj);
+	  	  obj.uid = $scope.user.uid;
+	  	  console.log(loginService.getAuth());
+	  	  console.log($scope.user);
+		  $scope.consumptions.$add(obj);
 	  };
 	  
 	  $scope.deleteConsumption= function(obj) {
-		  $localStorage.consumptions.splice($localStorage.consumptions.indexOf(obj),1);
+		  $scope.consumptions.splice($scope.consumptions.indexOf(obj),1);
 	  };
 
 	  
 	  $scope.getMaxKM= function(obj) {
   		  var result = 0;
-		  if ($localStorage.consumptions != undefined) {
-			  result = Math.max.apply(Math,$localStorage.consumptions.map(function(elem){return elem.odo;}));
+		  if ($scope.consumptions != undefined && $scope.consumptions.length > 0) {
+			  result = Math.max.apply(Math,$scope.consumptions.map(function(elem){return elem.odo;}));
 		  }
 		  return result;
 	  };
@@ -55,10 +58,16 @@ angular.module('fcApp.controllers', ['ngStorage','firebase']).
 
 .controller('LoginController', ['$scope','loginService', function($scope, loginService) {
 	
-	$scope.doLogin = function() {
+	$scope.doFBLogin = function() {
 		console.log("Login was called");
 		loginService.getAuth().login('facebook');	
 	}
+
+	$scope.doGoogleLogin = function() {
+		console.log("Login was called");
+		loginService.getAuth().login('google');	
+	}
+
 
 	$scope.doLogout = function() {
 		console.log("Logout was called");
@@ -70,9 +79,8 @@ angular.module('fcApp.controllers', ['ngStorage','firebase']).
 
 .service('loginService', ['$rootScope', function($rootScope) {
 	var loginService = {};
-
-	var chatRef = new Firebase('https://burning-fire-9910.firebaseio.com/');
-	var auth = new FirebaseSimpleLogin(chatRef, function(error, user) {
+	var fuels = new Firebase('https://burning-fire-9910.firebaseio.com/fuels');
+	var auth = new FirebaseSimpleLogin(fuels, function(error, user) {
 		if (error) {
 		    // an error occurred while attempting login
 		    console.log(error);
@@ -92,6 +100,11 @@ angular.module('fcApp.controllers', ['ngStorage','firebase']).
 	loginService.getAuth = function() {
 		return auth;
 	}
+
+	loginService.getFuels = function() {
+		return fuels;
+	}
+
 
 	return loginService;
 }])

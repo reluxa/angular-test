@@ -26,12 +26,40 @@
 			<td>12 450 HUF</td>
 		</tr>
 	</table>
-	<button class="btn btn-facebook" ng-click="doLogin()"><i class="fa fa-facebook"></i> | Sign in with Facebook</button>
+	<button class="btn btn-facebook" ng-click="doFBLogin()"><i class="fa fa-facebook"></i> | Sign in with Facebook</button>
 
-	<button class="btn btn-google-plus" ng-click="printAuth()"><i class="fa fa-google-plus"></i> | Sign in with Google</button>
+	<button class="btn btn-google-plus" ng-click="doGoogleLogin()"><i class="fa fa-google-plus"></i> | Sign in with Google</button>
 
 	<button class="btn" ng-click="doLogout()">Logout</button>
 	
-	
+	<br/>
+      <input id="myinput" type="text">
+
+      <script type="text/javascript">
+      $(function() {
+        $("#myinput").suggest({
+          key:"AIzaSyDjk7T9IV5Ai4zUndKr3WoR12IijkT327A",
+          exact: "true",
+          filter:'(all type:/automotive/make)'
+        });
+      });
+      </script>
+
+      <div id="result">
+
+
+      <script type="text/javascript">
+
+var searchTerm="toyota";
+var url="http://en.wikipedia.org/w/api.php?action=parse&format=json&page=" + searchTerm+"&redirects&prop=text&callback=?";
+$.getJSON(url,function(data){
+  wikiHTML = data.parse.text["*"];
+  $wikiDOM = $("<document>"+wikiHTML+"</document>");
+  $("#result").append($wikiDOM.find('.infobox').html());
+});
+
+
+      </script>
+
 
 </div>
