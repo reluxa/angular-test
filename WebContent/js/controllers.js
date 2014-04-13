@@ -18,15 +18,11 @@ angular.module('fcApp.controllers', ['ngStorage','firebase']).
 		  //$scope.uid = $scope.user.uid;
 	  }
 
-	  $scope.test = function() {
-		  return "returned fuel entries";
-	  };
-	  
 	  $scope.open = function($event) {
 		 $event.preventDefault();
 		 $event.stopPropagation();
 		 $scope.opened = true;
-	  }
+	  };
 	  
 	  $scope.consumptions = $firebase(loginService.getFuels());
 	  
@@ -49,6 +45,7 @@ angular.module('fcApp.controllers', ['ngStorage','firebase']).
 		  }
 		  return result;
 	  };
+	  
 	  
 	  init();
 	  
