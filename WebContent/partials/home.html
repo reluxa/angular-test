@@ -36,30 +36,43 @@
       <input id="myinput" type="text">
 
       <script type="text/javascript">
-      $(function() {
-        $("#myinput").suggest({
-          key:"AIzaSyDjk7T9IV5Ai4zUndKr3WoR12IijkT327A",
-          exact: "true",
-          filter:'(all type:/automotive/make)'
-        });
-      });
+      // $(function() {
+      //   $("#myinput").suggest({
+      //     key:"AIzaSyDjk7T9IV5Ai4zUndKr3WoR12IijkT327A",
+      //     exact: "true",
+      //     filter:'(all type:/automotive/make)'
+      //   });
+      // });
       </script>
 
-      <div id="result">
-
+      <input id="wikinput" type="text">
 
       <script type="text/javascript">
 
-var searchTerm="toyota";
-var url="http://en.wikipedia.org/w/api.php?action=parse&format=json&page=" + searchTerm+"&redirects&prop=text&callback=?";
-$.getJSON(url,function(data){
-  wikiHTML = data.parse.text["*"];
-  $wikiDOM = $("<document>"+wikiHTML+"</document>");
-  $("#result").append($wikiDOM.find('.infobox').html());
-});
+      $(function() {
+		var timer, delay = 500;
+		$('#wikinput').bind('keydown blur change', function(e) {
+		    var _this = $(this);
+		    clearTimeout(timer);
+		    timer = setTimeout(function() {
+				var url="http://en.wikipedia.org/w/api.php?action=parse&format=json&page=" + _this.val()+"&redirects&prop=text&callback=?";
+				$.getJSON(url,function(data){
+				  wikiHTML = data.parse.text["*"];
+				  $wikiDOM = $("<document>"+wikiHTML+"</document>");
+				  console.log($wikiDOM.html());				  
+				  var src = $wikiDOM.find('.infobox').find('img').attr('src');
+				  
+				  $("#result").attr("src",src);
+				});}, delay );
+		});
 
+
+	});
 
       </script>
+
+      <img id="result" src""></img>
+
 
 
 </div>
